@@ -48,16 +48,42 @@ public class CustomItems {
         corpseModelNameProvider = item -> {
             try {
                 CreatureTemplate tpl = CreatureTemplateFactory.getInstance().getTemplate(item.getData1());
+
+                String colorText = "";
+                switch ((item.getData2() >> 16) & 0x0F) {
+                    case 1:
+                        colorText = "brown.";
+                        break;
+                    case 2:
+                        colorText = "gold.";
+                        break;
+                    case 3:
+                        colorText = "black.";
+                        break;
+                    case 4:
+                        colorText = "white.";
+                        break;
+                    case 5:
+                        colorText = "piebaldPinto.";
+                        break;
+                    case 6:
+                        colorText = "bloodBay.";
+                        break;
+                    case 7:
+                        colorText = "ebonyBlack.";
+                        break;
+                }
+
                 String model = "model.corpse.";
                 switch (item.getAuxData()) {
                     case 0:
-                        model += tpl.getCorpsename();
+                        model += tpl.getCorpsename() + colorText;
                         break;
                     case 1:
-                        model += tpl.getCorpsename() + "butchered.";
+                        model += tpl.getCorpsename() + colorText + "butchered.";
                         break;
                     case 2:
-                        model = tpl.getModelName() + ".";
+                        model = tpl.getModelName() + "." + colorText.toLowerCase();
                         if (model.equals("model.creature.humanoid.human.player."))
                             model = "model.creature.humanoid.human.player.zombie.";
                         break;

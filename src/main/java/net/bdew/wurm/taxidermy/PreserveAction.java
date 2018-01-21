@@ -13,6 +13,7 @@ import com.wurmonline.server.items.ItemList;
 import com.wurmonline.server.items.NoSuchTemplateException;
 import com.wurmonline.server.skills.Skill;
 import com.wurmonline.server.skills.SkillList;
+import org.gotti.wurmunlimited.modloader.ReflectionUtil;
 import org.gotti.wurmunlimited.modsupport.actions.ActionPerformer;
 import org.gotti.wurmunlimited.modsupport.actions.ActionPropagation;
 import org.gotti.wurmunlimited.modsupport.actions.ModActions;
@@ -87,8 +88,41 @@ public class PreserveAction implements ActionPerformer {
                     created.setData1(target.getData1());
                     created.setAuxData((byte) aux);
                     created.setFemale(target.female);
+
                     float scale = target.getSizeY() / target.getTemplate().getSizeY();
-                    created.setData2(target.getAuxData() | ((int) (scale * 20f) << 8));
+
+                    int color = 0;
+                    try {
+                        if (tpl.isBlackOrWhite || (boolean) ReflectionUtil.getPrivateField(tpl, ReflectionUtil.getField(CreatureTemplate.class, "isHorse"))) {
+                            switch (target.getDescription()) {
+                                case "brown":
+                                    color = 1;
+                                    break;
+                                case "gold":
+                                    color = 2;
+                                    break;
+                                case "black":
+                                    color = 3;
+                                    break;
+                                case "white":
+                                    color = 4;
+                                    break;
+                                case "piebaldPinto":
+                                    color = 5;
+                                    break;
+                                case "bloodBay":
+                                    color = 6;
+                                    break;
+                                case "ebonyBlack":
+                                    color = 7;
+                                    break;
+                            }
+                        }
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        TaxidermyMod.logException("Error getting isHorse", e);
+                    }
+
+                    created.setData2(target.getAuxData() | ((int) (scale * 20f) << 8) | (color << 16));
                     created.setName("preserved " + (target.getName().toLowerCase().replace("corpse of ", "").replace("The ", "")) + " body");
                     if (suffix.length() > 0)
                         created.setDescription(suffix);
