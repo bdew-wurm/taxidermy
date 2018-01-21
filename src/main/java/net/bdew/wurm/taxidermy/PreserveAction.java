@@ -57,7 +57,8 @@ public class PreserveAction implements ActionPerformer {
 
         if (performer.getKarma() < karmaCost) {
             if (performer.getPower() > 0) {
-                comm.sendNormalServerMessage("You don't have enough karma to transfer to the body... but since you are a GM who cares, right?");
+                if (counter == 1f)
+                    comm.sendNormalServerMessage("You don't have enough karma to transfer to the body... but since you are a GM who cares, right?");
             } else {
                 comm.sendAlertServerMessage("You don't have enough karma to transfer to the body.");
                 return propagate(action, ActionPropagation.FINISH_ACTION, ActionPropagation.NO_ACTION_PERFORMER_PROPAGATION, ActionPropagation.NO_SERVER_PROPAGATION);
