@@ -1,5 +1,6 @@
 package net.bdew.wurm.taxidermy;
 
+import com.wurmonline.server.creatures.Communicator;
 import com.wurmonline.server.items.Item;
 import com.wurmonline.server.skills.SkillList;
 
@@ -23,4 +24,21 @@ public class Hooks {
             return -10;
     }
 
+    public static boolean sendItemHook(Communicator comm, Item item) {
+        if ((item.getTemplateId() == CustomItems.stuffedCorpseId) && (item.getAuxData() == 2)) {
+            Animated.sendAnimated(comm, item, item.getPosX(), item.getPosY(), item.getPosZ(), item.getRotation());
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static boolean removeItemHook(Communicator comm, Item item) {
+        if ((item.getTemplateId() == CustomItems.stuffedCorpseId) && (item.getAuxData() == 2)) {
+            Animated.removeAnimated(comm, item);
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

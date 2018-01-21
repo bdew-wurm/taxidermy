@@ -10,13 +10,14 @@ import com.wurmonline.server.skills.SkillList;
 import com.wurmonline.shared.constants.ItemMaterials;
 import org.gotti.wurmunlimited.modsupport.ItemTemplateBuilder;
 import org.gotti.wurmunlimited.modsupport.items.ModItems;
+import org.gotti.wurmunlimited.modsupport.items.ModelNameProvider;
 
 import java.io.IOException;
 
 public class CustomItems {
     public static ItemTemplate taxidermyKit, stuffedCorpse;
     public static int taxidermyKitId, stuffedCorpseId;
-
+    public static ModelNameProvider corpseModelNameProvider;
 
     public static void registerCorpse() throws IOException {
         stuffedCorpse = new ItemTemplateBuilder("bdew.taxidermy.body")
@@ -44,7 +45,7 @@ public class CustomItems {
 
         stuffedCorpseId = stuffedCorpse.getTemplateId();
 
-        ModItems.addModelNameProvider(stuffedCorpseId, item -> {
+        corpseModelNameProvider = item -> {
             try {
                 CreatureTemplate tpl = CreatureTemplateFactory.getInstance().getTemplate(item.getData1());
                 String model = "model.corpse.";
@@ -80,7 +81,9 @@ public class CustomItems {
             } catch (NoSuchCreatureTemplateException e) {
                 return "model.corpse.";
             }
-        });
+        };
+
+        ModItems.addModelNameProvider(stuffedCorpseId, corpseModelNameProvider);
     }
 
     public static void registerKit() throws IOException {

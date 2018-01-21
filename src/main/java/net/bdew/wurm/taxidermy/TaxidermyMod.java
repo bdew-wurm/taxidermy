@@ -2,12 +2,14 @@ package net.bdew.wurm.taxidermy;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
+import javassist.CtClass;
 import javassist.NotFoundException;
 import org.gotti.wurmunlimited.modloader.classhooks.HookManager;
 import org.gotti.wurmunlimited.modloader.interfaces.*;
 import org.gotti.wurmunlimited.modsupport.actions.ModActions;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,10 +58,16 @@ public class TaxidermyMod implements WurmServerMod, Initable, PreInitable, Confi
                     .getMethod("getImproveSkill", "(Lcom/wurmonline/server/items/Item;)I")
                     .insertAfter("if ($_ <= 0) $_ = net.bdew.wurm.taxidermy.Hooks.getImproveSkill($1);");
 
+            CtClass ctCommunicator = classPool.getCtClass("com.wurmonline.server.creatures.Communicator");
+            ctCommunicator.getMethod("sendItem", "(Lcom/wurmonline/server/items/Item;JZ)V")
+                    .insertBefore("if (!net.bdew.wurm.taxidermy.Hooks.sendItemHook(this, $1)) return;");
+            ctCommunicator.getMethod("sendRemoveItem", "(Lcom/wurmonline/server/items/Item;)V")
+                    .insertAfter("net.bdew.wurm.taxidermy.Hooks.removeItemHook(this, $1);");
+
+
         } catch (CannotCompileException | NotFoundException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
@@ -74,7 +82,8 @@ public class TaxidermyMod implements WurmServerMod, Initable, PreInitable, Confi
                 CustomItems.registerKit();
                 CustomItems.registerRecipes();
             }
-        } catch (IOException e) {
+            Compat3D.installDisplayHook();
+        } catch (IOException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
