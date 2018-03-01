@@ -37,7 +37,8 @@ public class CustomItems {
                         ItemTypes.ITEM_TYPE_NAMED,
                         ItemTypes.ITEM_TYPE_NORENAME,
                         ItemTypes.ITEM_TYPE_REPAIRABLE,
-                        ItemTypes.ITEM_TYPE_TURNABLE
+                        ItemTypes.ITEM_TYPE_TURNABLE,
+                        ItemTypes.ITEM_TYPE_COLORABLE
                 })
                 .material(ItemMaterials.MATERIAL_WOOD_BIRCH)
                 .modelName("model.corpse.")

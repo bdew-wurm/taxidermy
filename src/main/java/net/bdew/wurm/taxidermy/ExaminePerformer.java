@@ -52,7 +52,16 @@ public class ExaminePerformer implements ActionPerformer {
                 res += MethodsItems.getRarityDesc(target.rarity);
             }
 
+            if (target.getColor() != -1) {
+                res += MethodsItems.getColorDesc(target.getColor());
+            }
+
             performer.getCommunicator().sendNormalServerMessage(res);
+
+            for (final String s : MethodsItems.getEnhancementStrings(target)) {
+                performer.getCommunicator().sendNormalServerMessage(s);
+            }
+
             return propagate(action, ActionPropagation.FINISH_ACTION, ActionPropagation.NO_SERVER_PROPAGATION, ActionPropagation.NO_ACTION_PERFORMER_PROPAGATION);
         } else {
             return propagate(action, ActionPropagation.CONTINUE_ACTION, ActionPropagation.SERVER_PROPAGATION, ActionPropagation.ACTION_PERFORMER_PROPAGATION);
