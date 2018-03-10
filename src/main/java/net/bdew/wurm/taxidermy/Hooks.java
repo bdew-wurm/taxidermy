@@ -7,6 +7,7 @@ import com.wurmonline.server.skills.SkillList;
 public class Hooks {
     public static float sizeMod(Item item) {
         if (item.getTemplateId() == CustomItems.stuffedCorpseId) {
+            if (item.getData2() == -1) return 1f;
             int sf = (item.getData2() >> 8) & 0xFF;
             if (sf > 0)
                 return (float) (sf) / 20f;
