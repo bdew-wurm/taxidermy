@@ -85,16 +85,28 @@ public class CustomItems {
                         model += tpl.getCorpsename() + colorText + "butchered.";
                         break;
                     case 2:
-                        model = tpl.getModelName() + "." + colorText.toLowerCase();
-                        if (model.equals("model.creature.humanoid.human.player."))
-                            model = "model.creature.humanoid.human.player.zombie.";
+                        if (tpl.isBlackOrWhite) {
+                            model = tpl.getModelName();
+                            if (item.female) {
+                                model += ".female";
+                            } else if (item.getAuxData() == 2) {
+                                model += ".male";
+                            }
+                            model += "." + colorText.toLowerCase();
+                        } else {
+                            model = tpl.getModelName() + "." + colorText.toLowerCase();
+                            if (model.equals("model.creature.humanoid.human.player."))
+                                model = "model.creature.humanoid.human.player.zombie.";
+                        }
                         break;
                 }
 
-                if (item.female) {
-                    model += "female.";
-                } else if (item.getAuxData() == 2) {
-                    model += "male.";
+                if (!tpl.isBlackOrWhite || item.getAuxData() != 2) {
+                    if (item.female) {
+                        model += "female.";
+                    } else if (item.getAuxData() == 2) {
+                        model += "male.";
+                    }
                 }
 
                 byte kingdom = (byte) (item.getData2() & 0xFF);
