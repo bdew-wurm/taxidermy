@@ -23,7 +23,8 @@ public class Animated {
                 0L,
                 (byte) 0,
                 false,
-                false
+                false,
+                (byte) 0
         );
         if (item.getRarity() != 0)
             comm.updateCreatureRarity(item.getWurmId(), item.rarity);
