@@ -26,7 +26,7 @@ public class CustomItems {
                 .weightGrams(20000)
                 .dimensions(100, 100, 100)
                 .decayTime(Long.MAX_VALUE)
-                .primarySkill(SkillList.CARPENTRY_FINE)
+                .primarySkill(TaxidermyMod.preserveSkill)
                 .difficulty(30)
                 .value(1000)
                 .itemTypes(new short[]{
@@ -149,7 +149,7 @@ public class CustomItems {
     }
 
     public static void registerRecipes() {
-        CreationEntryCreator.createAdvancedEntry(SkillList.CARPENTRY_FINE, ItemList.shaft, ItemList.clothYard, taxidermyKitId, false, false, 0.0f, true, false, CreationCategories.TOOLS)
+        CreationEntryCreator.createAdvancedEntry(TaxidermyMod.preserveSkill, ItemList.shaft, ItemList.clothYard, taxidermyKitId, false, false, 0.0f, true, false, CreationCategories.TOOLS)
                 .addRequirement(new CreationRequirement(1, ItemList.clothYard, 10, true))
                 .addRequirement(new CreationRequirement(2, ItemList.shaft, 5, true))
                 .addRequirement(new CreationRequirement(3, ItemList.scrapwood, 20, true));

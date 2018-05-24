@@ -2,7 +2,6 @@ package net.bdew.wurm.taxidermy;
 
 import com.wurmonline.server.creatures.Communicator;
 import com.wurmonline.server.items.Item;
-import com.wurmonline.server.skills.SkillList;
 
 public class Hooks {
     public static float sizeMod(Item item) {
@@ -20,7 +19,7 @@ public class Hooks {
 
     public static int getImproveSkill(Item item) {
         if (item.getTemplateId() == CustomItems.stuffedCorpseId)
-            return SkillList.CARPENTRY_FINE;
+            return TaxidermyMod.preserveSkill;
         else
             return -10;
     }
