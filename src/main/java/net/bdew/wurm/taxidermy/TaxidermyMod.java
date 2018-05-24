@@ -42,7 +42,7 @@ public class TaxidermyMod implements WurmServerMod, Initable, PreInitable, Confi
         addRecipes = Boolean.parseBoolean(properties.getProperty("addRecipes", "true"));
         normalCost = Integer.parseInt(properties.getProperty("normalCost", "0"), 10);
         animatedCost = Integer.parseInt(properties.getProperty("animatedCost", "0"), 10);
-        preserveSkill = Integer.parseInt(properties.getProperty("preserveSkill", "0"), 10044);
+        preserveSkill = Integer.parseInt(properties.getProperty("preserveSkill", "10044"), 10);
     }
 
     @Override
