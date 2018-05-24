@@ -12,7 +12,6 @@ import com.wurmonline.server.items.ItemFactory;
 import com.wurmonline.server.items.ItemList;
 import com.wurmonline.server.items.NoSuchTemplateException;
 import com.wurmonline.server.skills.Skill;
-import com.wurmonline.server.skills.SkillList;
 import org.gotti.wurmunlimited.modloader.ReflectionUtil;
 import org.gotti.wurmunlimited.modsupport.actions.ActionPerformer;
 import org.gotti.wurmunlimited.modsupport.actions.ActionPropagation;
@@ -65,7 +64,7 @@ public class PreserveAction implements ActionPerformer {
             }
         }
 
-        Skill fineCarp = performer.getSkills().getSkillOrLearn(SkillList.CARPENTRY_FINE);
+        Skill fineCarp = performer.getSkills().getSkillOrLearn(TaxidermyMod.preserveSkill);
         CreatureTemplate tpl;
 
         try {
