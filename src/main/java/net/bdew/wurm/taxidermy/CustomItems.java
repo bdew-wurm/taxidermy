@@ -49,40 +49,21 @@ public class CustomItems {
 
         corpseModelNameProvider = item -> {
             try {
-                CreatureTemplate tpl = CreatureTemplateFactory.getInstance().getTemplate(item.getData1());
+                int tplId = item.getData1();
+                int colorId = (item.getData2() >> 16) & 0x0F;
 
-                String colorText = "";
-                switch ((item.getData2() >> 16) & 0x0F) {
-                    case 1:
-                        colorText = "brown.";
-                        break;
-                    case 2:
-                        colorText = "gold.";
-                        break;
-                    case 3:
-                        colorText = "black.";
-                        break;
-                    case 4:
-                        colorText = "white.";
-                        break;
-                    case 5:
-                        colorText = "piebaldPinto.";
-                        break;
-                    case 6:
-                        colorText = "bloodBay.";
-                        break;
-                    case 7:
-                        colorText = "ebonyBlack.";
-                        break;
-                }
+                CreatureTemplate tpl = CreatureTemplateFactory.getInstance().getTemplate(tplId);
+
+                String colorText = ColorNames.getLivingName(tplId, colorId);
+                if (!colorText.isEmpty()) colorText += ".";
 
                 String model = "model.corpse.";
                 switch (item.getAuxData()) {
                     case 0:
-                        model += tpl.getCorpsename() + colorText;
+                        model += tpl.getCorpsename() + ColorNames.getCorpseName(tplId, colorId);
                         break;
                     case 1:
-                        model += tpl.getCorpsename() + colorText + "butchered.";
+                        model += tpl.getCorpsename() + ColorNames.getCorpseName(tplId, colorId) + "butchered.";
                         break;
                     case 2:
                         if (tpl.isBlackOrWhite) {
@@ -92,9 +73,9 @@ public class CustomItems {
                             } else if (item.getAuxData() == 2) {
                                 model += ".male";
                             }
-                            model += "." + colorText.toLowerCase();
+                            model += "." + ColorNames.getLivingName(tplId, colorId);
                         } else {
-                            model = tpl.getModelName() + "." + colorText.toLowerCase();
+                            model = tpl.getModelName() + "." + ColorNames.getLivingName(tplId, colorId);
                             if (model.equals("model.creature.humanoid.human.player."))
                                 model = "model.creature.humanoid.human.player.zombie.";
                         }

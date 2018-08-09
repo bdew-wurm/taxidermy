@@ -6,13 +6,20 @@ import javassist.CtClass;
 import javassist.NotFoundException;
 import org.gotti.wurmunlimited.modloader.classhooks.HookManager;
 import org.gotti.wurmunlimited.modloader.interfaces.*;
+import org.gotti.wurmunlimited.modsupport.IdFactory;
+import org.gotti.wurmunlimited.modsupport.IdType;
 import org.gotti.wurmunlimited.modsupport.actions.ModActions;
+import org.gotti.wurmunlimited.modsupport.creatures.CreatureTemplateParser;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class TaxidermyMod implements WurmServerMod, Initable, PreInitable, Configurable, ItemTemplatesCreatedListener, ServerStartedListener {
     private static final Logger logger = Logger.getLogger("TaxidermyMod");
@@ -36,6 +43,7 @@ public class TaxidermyMod implements WurmServerMod, Initable, PreInitable, Confi
     private int normalCost = 0;
     private int animatedCost = 0;
     static int preserveSkill = 0;
+    private Map<String, String> colorMappings;
 
     @Override
     public void configure(Properties properties) {
@@ -43,6 +51,10 @@ public class TaxidermyMod implements WurmServerMod, Initable, PreInitable, Confi
         normalCost = Integer.parseInt(properties.getProperty("normalCost", "0"), 10);
         animatedCost = Integer.parseInt(properties.getProperty("animatedCost", "0"), 10);
         preserveSkill = Integer.parseInt(properties.getProperty("preserveSkill", "10044"), 10);
+
+        colorMappings = properties.stringPropertyNames().stream()
+                .filter(x -> x.startsWith("color@"))
+                .collect(Collectors.toMap(Function.identity(), properties::getProperty));
     }
 
     @Override
@@ -91,6 +103,26 @@ public class TaxidermyMod implements WurmServerMod, Initable, PreInitable, Confi
 
     @Override
     public void onServerStarted() {
+        CreatureTemplateParser cidParser = new CreatureTemplateParser() {
+            @Override
+            protected int unparsable(String name) {
+                return IdFactory.getIdFor(name, IdType.CREATURETEMPLATE);
+            }
+        };
+
+        colorMappings.forEach((key, valz) -> {
+            String[] keyparts = key.split("@");
+            String[] valparts = valz.split(":");
+            if (keyparts.length != 3 || valparts.length != 2) {
+                logWarning(String.format("Invalid color mapping: %s => %s", Arrays.toString(keyparts), Arrays.toString(valparts)));
+            } else {
+                int tpl = cidParser.parse(keyparts[1]);
+                int col = Integer.parseInt(keyparts[2], 10);
+                logInfo(String.format("Adding color mapping for %d: color=%d corpse=%s living=%s", tpl, col, valparts[0], valparts[1]));
+                ColorNames.addMapping(tpl, col, valparts[0], valparts[1]);
+            }
+        });
+
         ModActions.registerActionPerformer(new ExaminePerformer());
         if (addRecipes) {
             ModActions.registerBehaviourProvider(new PreserveBehaviourProvider(normalCost, animatedCost));
