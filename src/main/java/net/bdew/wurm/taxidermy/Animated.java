@@ -18,7 +18,7 @@ public class Animated {
                 (byte) (item.isOnSurface() ? 0 : -1),
                 false,
                 false,
-                false,
+                true,
                 (byte) (item.getData2() & 0xFF),
                 0L,
                 (byte) 0,
