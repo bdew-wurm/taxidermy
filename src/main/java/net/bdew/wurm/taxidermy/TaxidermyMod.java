@@ -117,7 +117,11 @@ public class TaxidermyMod implements WurmServerMod, Initable, PreInitable, Confi
                 logWarning(String.format("Invalid color mapping: %s => %s", Arrays.toString(keyparts), Arrays.toString(valparts)));
             } else {
                 int tpl = cidParser.parse(keyparts[1]);
-                int col = Integer.parseInt(keyparts[2], 10);
+                int col;
+                if (keyparts[2].equals("*"))
+                    col = -1;
+                else
+                    col = Integer.parseInt(keyparts[2], 10);
                 logInfo(String.format("Adding color mapping for %d: color=%d corpse=%s living=%s", tpl, col, valparts[0], valparts[1]));
                 ColorNames.addMapping(tpl, col, valparts[0], valparts[1]);
             }

@@ -54,9 +54,6 @@ public class CustomItems {
 
                 CreatureTemplate tpl = CreatureTemplateFactory.getInstance().getTemplate(tplId);
 
-                String colorText = ColorNames.getLivingName(tplId, colorId);
-                if (!colorText.isEmpty()) colorText += ".";
-
                 String model = "model.corpse.";
                 switch (item.getAuxData()) {
                     case 0:

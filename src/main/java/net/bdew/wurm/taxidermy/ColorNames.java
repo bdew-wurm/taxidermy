@@ -2,9 +2,11 @@ package net.bdew.wurm.taxidermy;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ColorNames {
     private static class CreatureMapping {
+        private String defaultLiving = "", defaultCorpse = "";
         private final Map<String, Integer> corpseToId = new HashMap<>();
         private final Map<Integer, String> idToCorpse = new HashMap<>();
         private final Map<Integer, String> idToLiving = new HashMap<>();
@@ -16,21 +18,26 @@ public class ColorNames {
         if (!creatures.containsKey(template))
             creatures.put(template, new CreatureMapping());
         CreatureMapping mapping = creatures.get(template);
-        mapping.corpseToId.put(corpse, colorId);
-        mapping.idToCorpse.put(colorId, corpse.replace(" ", ""));
-        mapping.idToLiving.put(colorId, living);
+        if (colorId == -1) {
+            mapping.defaultCorpse = corpse.replace(" ", "");
+            mapping.defaultLiving = living;
+        } else {
+            mapping.corpseToId.put(corpse, colorId);
+            mapping.idToCorpse.put(colorId, corpse.replace(" ", ""));
+            mapping.idToLiving.put(colorId, living);
+        }
     }
 
     public static String getLivingName(int template, int colorId) {
-        if (creatures.containsKey(template))
-            return creatures.get(template).idToLiving.getOrDefault(colorId, "") + ".";
-        else return "";
+        return Optional.ofNullable(creatures.get(template))
+                .map(mapping -> mapping.idToLiving.getOrDefault(colorId, mapping.defaultLiving) + ".")
+                .orElse("");
     }
 
     public static String getCorpseName(int template, int colorId) {
-        if (creatures.containsKey(template))
-            return creatures.get(template).idToCorpse.getOrDefault(colorId, "") + ".";
-        else return "";
+        return Optional.ofNullable(creatures.get(template))
+                .map(mapping -> mapping.idToCorpse.getOrDefault(colorId, mapping.defaultCorpse) + ".")
+                .orElse("");
     }
 
 
